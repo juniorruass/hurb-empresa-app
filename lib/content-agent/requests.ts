@@ -1,5 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { isMissingTableError } from "./schema-guard";
+import { isMissingTableError } from "@/lib/supabase/schema-guard";
 import type { ContentRequest, GeneratedContent, Objetivo } from "./types";
 
 const TABLE = "content_requests";

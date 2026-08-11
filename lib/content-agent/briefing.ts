@@ -1,5 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { isMissingTableError } from "./schema-guard";
+import { isMissingTableError } from "@/lib/supabase/schema-guard";
 import type { ClientBriefing, NewBriefing } from "./types";
 
 const TABLE = "client_briefings";
