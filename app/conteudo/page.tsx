@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getCurrentClient } from "@/lib/clients/session";
 import { getBriefing } from "@/lib/content-agent/briefing";
-import { listRequests } from "@/lib/content-agent/requests";
+import { countRequestsToday, listRequests, DAILY_CONTENT_LIMIT } from "@/lib/content-agent/requests";
 import { ConteudoForm } from "@/components/conteudo/conteudo-form";
 import { ConteudoHistorico } from "@/components/conteudo/conteudo-historico";
 import { ModuleLocked } from "@/components/shared/module-locked";
@@ -22,6 +22,7 @@ export default async function ConteudoPage() {
   }
 
   const [briefing, requests] = await Promise.all([getBriefing(client.clientId), listRequests(client.clientId)]);
+  const remaining = Math.max(0, DAILY_CONTENT_LIMIT - countRequestsToday(requests));
 
   return (
     <div className="flex flex-col gap-6">
@@ -40,7 +41,7 @@ export default async function ConteudoPage() {
         </div>
       )}
 
-      <ConteudoForm />
+      <ConteudoForm remaining={remaining} />
 
       <ConteudoHistorico requests={requests} />
     </div>

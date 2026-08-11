@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentClient } from "@/lib/clients/session";
 import { getBriefing } from "@/lib/content-agent/briefing";
 import { generateContent } from "@/lib/content-agent/generate";
-import { createRequest } from "@/lib/content-agent/requests";
+import { countRequestsToday, createRequest, listRequests, DAILY_CONTENT_LIMIT } from "@/lib/content-agent/requests";
 import type { Objetivo } from "@/lib/content-agent/types";
 
 export const dynamic = "force-dynamic";
@@ -30,6 +30,14 @@ export async function POST(req: Request) {
   }
 
   try {
+    const existing = await listRequests(client.clientId);
+    if (countRequestsToday(existing) >= DAILY_CONTENT_LIMIT) {
+      return NextResponse.json(
+        { error: `Limite de ${DAILY_CONTENT_LIMIT} conteúdos por dia atingido. Volte amanhã.` },
+        { status: 429 },
+      );
+    }
+
     const briefing = await getBriefing(client.clientId);
     const generated = await generateContent(client.clientName, briefing, objetivo, tema, rede);
     const request = await createRequest({ clientId: client.clientId, objetivo, tema, rede, generated });

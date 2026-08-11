@@ -11,7 +11,7 @@ import type { Objetivo, ContentRequest } from "@/lib/content-agent/types";
 
 const REDES = ["Instagram", "TikTok", "LinkedIn", "Facebook"];
 
-export function ConteudoForm() {
+export function ConteudoForm({ remaining }: { remaining: number }) {
   const router = useRouter();
   const [objetivo, setObjetivo] = useState<Objetivo>("organico");
   const [tema, setTema] = useState("");
@@ -42,8 +42,18 @@ export function ConteudoForm() {
     }
   }
 
+  const limitReached = remaining <= 0;
+
   return (
     <div className="flex flex-col gap-4 rounded-xl bg-card p-5 text-sm text-card-foreground ring-1 ring-foreground/10">
+      <p className="text-xs text-muted-foreground">
+        {limitReached
+          ? "Você já gerou os conteúdos de hoje. Volte amanhã pra gerar mais."
+          : remaining === 1
+            ? "Resta 1 geração hoje."
+            : `Restam ${remaining} gerações hoje.`}
+      </p>
+
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
           <Label>Objetivo</Label>
@@ -95,7 +105,7 @@ export function ConteudoForm() {
 
         {error && <p className="text-sm text-destructive">{error}</p>}
 
-        <Button type="submit" disabled={loading || !tema.trim()} className="w-fit gap-2">
+        <Button type="submit" disabled={loading || limitReached || !tema.trim()} className="w-fit gap-2">
           {loading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Sparkles className="h-4 w-4" aria-hidden="true" />}
           Gerar
         </Button>

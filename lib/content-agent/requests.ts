@@ -3,6 +3,12 @@ import { isMissingTableError } from "@/lib/supabase/schema-guard";
 import type { ContentRequest, GeneratedContent, Objetivo } from "./types";
 
 const TABLE = "content_requests";
+export const DAILY_CONTENT_LIMIT = 2;
+
+export function countRequestsToday(requests: ContentRequest[]): number {
+  const today = new Date().toISOString().slice(0, 10);
+  return requests.filter((r) => r.created_at.slice(0, 10) === today).length;
+}
 
 export async function listRequests(clientId: string): Promise<ContentRequest[]> {
   const supabase = createAdminClient();
