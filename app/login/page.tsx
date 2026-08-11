@@ -4,7 +4,6 @@ import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
 
 function LoginForm() {
   const router = useRouter();
@@ -19,9 +18,13 @@ function LoginForm() {
     setLoading(true);
     setError(null);
     try {
-      const supabase = createClient();
-      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-      if (signInError) throw new Error("Email ou senha incorretos.");
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error ?? "Não foi possível entrar.");
       router.push(params.get("next") || "/");
       router.refresh();
     } catch (e) {

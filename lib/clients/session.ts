@@ -1,10 +1,11 @@
+import type { LucideIcon } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { MODULE_REGISTRY, isModuleKey, type ModuleKey } from "@/lib/modules";
 
 export interface CurrentClient {
   clientId: string;
   clientName: string;
-  enabledModules: { key: ModuleKey; label: string; description: string }[];
+  enabledModules: { key: ModuleKey; label: string; description: string; icon: LucideIcon }[];
 }
 
 /**

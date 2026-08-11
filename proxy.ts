@@ -48,6 +48,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|upflu-logo.png|upflu-icon.png|icon-192.png|icon-512.png|icon-512-maskable.png|apple-touch-icon.png|manifest.webmanifest|login).*)",
+    "/((?!_next/static|_next/image|favicon.ico|upflu-logo.png|upflu-icon.png|icon-192.png|icon-512.png|icon-512-maskable.png|apple-touch-icon.png|manifest.webmanifest|login|api/auth/login).*)",
   ],
 };

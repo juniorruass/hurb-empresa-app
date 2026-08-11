@@ -34,13 +34,25 @@ export default async function RootLayout({
 }>) {
   const client = await getCurrentClient();
 
+  const navItems = (client?.enabledModules ?? []).map((m) => {
+    const Icon = m.icon;
+    return {
+      key: m.key,
+      label: m.label,
+      href: `/${m.key}`,
+      icon: <Icon className="h-4 w-4" aria-hidden="true" />,
+    };
+  });
+
   return (
     <html
       lang="pt-BR"
       className={`dark ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <AppShell clientName={client?.clientName}>{children}</AppShell>
+        <AppShell clientName={client?.clientName} navItems={navItems}>
+          {children}
+        </AppShell>
       </body>
     </html>
   );

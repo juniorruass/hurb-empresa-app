@@ -30,20 +30,24 @@ export default async function Home() {
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {client.enabledModules.map((mod) => (
-            <Link
-              key={mod.key}
-              href={`/${mod.key}`}
-              className="flex flex-col gap-2 rounded-2xl border border-border bg-card p-5 transition-colors hover:border-primary/50"
-            >
-              <span className="font-medium">{mod.label}</span>
-              <span className="text-sm text-muted-foreground">{mod.description}</span>
-              <span className="mt-auto flex items-center gap-1 pt-2 text-sm font-medium text-primary">
-                Abrir
-                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-              </span>
-            </Link>
-          ))}
+          {client.enabledModules.map((mod) => {
+            const Icon = mod.icon;
+            return (
+              <Link
+                key={mod.key}
+                href={`/${mod.key}`}
+                className="relative flex flex-col gap-2 overflow-hidden rounded-2xl border border-border bg-card p-5 transition-colors hover:border-primary/50"
+              >
+                <Icon className="pointer-events-none absolute -right-2 -bottom-2.5 h-16 w-16 text-primary/10" aria-hidden="true" />
+                <span className="font-medium">{mod.label}</span>
+                <span className="text-sm text-muted-foreground">{mod.description}</span>
+                <span className="mt-auto flex items-center gap-1 pt-2 text-sm font-medium text-primary">
+                  Abrir
+                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                </span>
+              </Link>
+            );
+          })}
         </div>
       )}
     </div>
