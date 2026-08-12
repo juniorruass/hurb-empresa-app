@@ -16,6 +16,8 @@ export interface NewBriefing {
   objetivos?: string | null;
 }
 
+export type ApprovalStatus = "pendente" | "aprovado" | "ajuste_solicitado";
+
 export interface ContentRequest {
   id: string;
   client_id: string;
@@ -26,6 +28,8 @@ export interface ContentRequest {
   hashtags: string | null;
   variacoes: string[] | null;
   roteiro_video: string;
+  status: ApprovalStatus;
+  comentario: string | null;
   created_at: string;
 }
 

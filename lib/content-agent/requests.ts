@@ -1,6 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isMissingTableError } from "@/lib/supabase/schema-guard";
-import type { ContentRequest, GeneratedContent, Objetivo } from "./types";
+import type { ApprovalStatus, ContentRequest, GeneratedContent, Objetivo } from "./types";
 
 const TABLE = "content_requests";
 export const DAILY_CONTENT_LIMIT = 2;
@@ -49,6 +49,29 @@ export async function createRequest(input: {
   if (error) {
     if (isMissingTableError(error)) {
       throw new Error("Banco ainda não está pronto pra esse módulo (migration 019 pendente).");
+    }
+    throw new Error(error.message);
+  }
+  return data as ContentRequest;
+}
+
+export async function updateRequestStatus(
+  clientId: string,
+  requestId: string,
+  status: ApprovalStatus,
+  comentario?: string | null,
+): Promise<ContentRequest> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from(TABLE)
+    .update({ status, comentario: comentario ?? null })
+    .eq("id", requestId)
+    .eq("client_id", clientId)
+    .select()
+    .single();
+  if (error) {
+    if (isMissingTableError(error)) {
+      throw new Error("Banco ainda não está pronto pra esse módulo (migration 025 pendente).");
     }
     throw new Error(error.message);
   }
