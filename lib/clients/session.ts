@@ -5,6 +5,7 @@ import { MODULE_REGISTRY, isModuleKey, type ModuleKey } from "@/lib/modules";
 export interface CurrentClient {
   clientId: string;
   clientName: string;
+  metaAdAccountId: string | null;
   enabledModules: { key: ModuleKey; label: string; description: string; icon: LucideIcon }[];
 }
 
@@ -23,13 +24,13 @@ export async function getCurrentClient(): Promise<CurrentClient | null> {
 
   const { data: clientUser } = await supabase
     .from("client_users")
-    .select("client_id, clients(name)")
+    .select("client_id, clients(name, meta_ad_account_id)")
     .eq("auth_user_id", user.id)
     .maybeSingle();
 
   if (!clientUser) return null;
 
-  const clientRow = clientUser.clients as unknown as { name: string } | null;
+  const clientRow = clientUser.clients as unknown as { name: string; meta_ad_account_id: string | null } | null;
 
   const { data: modules } = await supabase
     .from("client_modules")
@@ -47,6 +48,7 @@ export async function getCurrentClient(): Promise<CurrentClient | null> {
   return {
     clientId: clientUser.client_id,
     clientName: clientRow?.name ?? "Cliente",
+    metaAdAccountId: clientRow?.meta_ad_account_id ?? null,
     enabledModules,
   };
 }
